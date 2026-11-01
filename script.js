@@ -66,29 +66,38 @@ document.getElementById('calc-btn').addEventListener('click', function() {
     let checkCalories = Math.round((totalProtein * 4) + (fats * 9) + (carbs * 4));
     let fiber = (dietType === 'vegan') ? 40 : 35;
 
-    // 3. Генерация сбалансированного меню (в готовом виде, без диких порций)
+// 3. Динамическая генерация сбалансированного меню под калории
     let breakfastHtml = '';
     let lunchHtml = '';
     let dinnerHtml = '';
     let snackHtml = '';
 
+    // Рассчитываем примерные порции в зависимости от целевых калорий
+    // Чем больше калорий (набор), тем больше граммовок мы закладываем в меню
+    let scaleFactor = targetCalories / 2000; // коэффициент относительно стандартных 2000 ккал
+
+    let oatGrams = Math.round(120 * scaleFactor);
+    let meatGrams = Math.round(140 * scaleFactor);
+    let sideGrams = Math.round(160 * scaleFactor);
+    let fishGrams = Math.round(150 * scaleFactor);
+    let dairyGrams = Math.round(150 * scaleFactor);
+
     if (dietType === 'omnivore') {
-        breakfastHtml = `<div class="menu-item">🌅 <strong>Завтрак:</strong> Омлет из 3 яиц + 150 г готовой овсяной каши + 1 фрукт.</div>`;
-        lunchHtml = `<div class="menu-item">☀️ <strong>Обед:</strong> 150 г готового куриного филе + 180 г готового риса или гречки + 200 г свежих овощей.</div>`;
-        dinnerHtml = `<div class="menu-item">🌙 <strong>Ужин:</strong> 160 г запеченной рыбы (минтай/горбуша) + 150 г тушеных овощей + 15 г орехов.</div>`;
-        snackHtml = `<div class="menu-item">🍎 <strong>Перекус:</strong> 150 г греческого йогурта или творога + горсть ягод.</div>`;
+        breakfastHtml = `<div class="menu-item">🌅 <strong>Завтрак:</strong> Омлет из 3 яиц + ${oatGrams} г готовой овсяной каши + 1 фрукт.</div>`;
+        lunchHtml = `<div class="menu-item">☀️ <strong>Обед:</strong> ${meatGrams} г готового куриного филе + ${sideGrams} г готового риса или гречки + 200 г свежих овощей.</div>`;
+        dinnerHtml = `<div class="menu-item">🌙 <strong>Ужин:</strong> ${fishGrams} г запеченной рыбы (минтай/горбуша) + 150 г тушеных овощей + 20 г орехов.</div>`;
+        snackHtml = `<div class="menu-item">🍎 <strong>Перекус:</strong> ${dairyGrams} г греческого йогурта или творога + горсть ягод.</div>`;
     } else if (dietType === 'vegetarian') {
-        breakfastHtml = `<div class="menu-item">🌅 <strong>Завтрак:</strong> 150 г творога со сметаной + 150 г готовой овсянки.</div>`;
-        lunchHtml = `<div class="menu-item">☀️ <strong>Обед:</strong> 180 г тушеной чечевицы или нута (или сыра тофу) + 180 г готового риса + 200 г салата.</div>`;
-        dinnerHtml = `<div class="menu-item">🌙 <strong>Ужин:</strong> Омлет из 3 яиц с овощами + 15 г семян или орехов.</div>`;
+        breakfastHtml = `<div class="menu-item">🌅 <strong>Завтрак:</strong> ${dairyGrams} г творога со сметаной + ${oatGrams} г готовой овсянки.</div>`;
+        lunchHtml = `<div class="menu-item">☀️ <strong>Обед:</strong> ${sideGrams} г тушеной чечевицы или нута (или сыра тофу) + ${sideGrams} г готового риса + 200 г салата.</div>`;
+        dinnerHtml = `<div class="menu-item">🌙 <strong>Ужин:</strong> Омлет из 3 яиц с овощами + 20 г семян или орехов.</div>`;
         snackHtml = `<div class="menu-item">🥛 <strong>Перекус:</strong> Стакан кефира или протеиновый коктейль + фрукт.</div>`;
     } else { // vegan
-        breakfastHtml = `<div class="menu-item">🌅 <strong>Завтрак:</strong> Каша овсяная на растительном молоке + 30 г орехов/семян + фрукт.</div>`;
-        lunchHtml = `<div class="menu-item">☀️ <strong>Обед:</strong> 180 г вареной фасоли, нута или чечевицы + 180 г готового киноа или гречки + 200 г свежих овощей.</div>`;
-        dinnerHtml = `<div class="menu-item">🌙 <strong>Ужин:</strong> 160 г обжаренного тофу с овощным рагу и зеленью.</div>`;
+        breakfastHtml = `<div class="menu-item">🌅 <strong>Завтрак:</strong> Каша овсяная на растительном молоке (${oatGrams} г) + 30 г орехов/семян + фрукт.</div>`;
+        lunchHtml = `<div class="menu-item">☀️ <strong>Обед:</strong> ${sideGrams} г вареной фасоли, нута или чечевицы + ${sideGrams} г готового киноа или гречки + 200 г свежих овощей.</div>`;
+        dinnerHtml = `<div class="menu-item">🌙 <strong>Ужин:</strong> ${fishGrams} г обжаренного тофу с овощным рагу и зеленью.</div>`;
         snackHtml = `<div class="menu-item">🥜 <strong>Перекус:</strong> Горсть орехов (30 г) и сухофрукты.</div>`;
     }
-
     // Вывод результатов
     const resultBox = document.getElementById('result');
     const caloriesText = document.getElementById('calories-text');
